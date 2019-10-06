@@ -8,6 +8,10 @@ int Customer::get_number_of_items() {
     return items_in_basket;
 }
 
+int Customer::get_time_placed() {
+    return time_placed;
+}
+
 int Customer::decrement_items() {
     return --items_in_basket;
 }

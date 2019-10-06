@@ -17,6 +17,8 @@ public:
     // Returns the number of items in the customer's basket
     int get_number_of_items();
 
+    int get_time_placed();
+
     // Decreases the amount of items in the customer's basket by 1
     // Returns the number of remaining items in the customer's basket
     int decrement_items() ;

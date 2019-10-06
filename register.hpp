@@ -15,7 +15,7 @@ public:
 
     int get_queue_size();
     int get_back_customer_basket_size();
-    void add_customer_to_queue(Customer _customer);
+    void add_customer_to_queue(Customer &_customer);
     void remove_front_customer_from_queue();
 
     // Only done if in store active register?

@@ -7,7 +7,7 @@ Register::Register(int _time_per_item) :
 time_per_item (_time_per_item), current_time_left_on_item (_time_per_item)
 {}
 
-void Register::add_customer_to_queue(Customer _customer) {
+void Register::add_customer_to_queue(Customer &_customer) {
     customer_queue.push(_customer);
 }
 
@@ -44,7 +44,7 @@ void Register::simulate_second() {
 
     if(customer_queue.front().get_number_of_items() == 0) {
         remove_front_customer_from_queue();
-        std::cout << "CUSTOMER DONE!" << std::endl;
+        std::cout << "CUSTOMER DONE!" << std::endl; //DEBUG
     }
 
     
