@@ -21,7 +21,7 @@ public:
 
 
     // Only done if in store active register?
-    virtual void simulate_second();
+    virtual int simulate_second();
     virtual ~Register() {};
 };
 
@@ -33,7 +33,7 @@ private:
 
 public:
     Training_Register(int _time_per_item);
-    void simulate_second();
+    int simulate_second();
     void reset_current_time_left_on_item();
 };
 

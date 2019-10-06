@@ -12,6 +12,10 @@ int Customer::get_time_placed() {
     return time_placed;
 }
 
+std::string Customer::get_customer_type() {
+    return customer_type;
+}
+
 int Customer::decrement_items() {
     return --items_in_basket;
 }

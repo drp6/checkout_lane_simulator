@@ -5,6 +5,7 @@
 #include <fstream>
 #include "customer.hpp"
 #include "register.hpp"
+#include "store.hpp"
 
 int get_store_info(std::string file_path, std::vector<Customer*> &customer_list, std::vector<Register*> &register_list);
 std::vector<Register*> create_register_list(int number_of_registers);
@@ -23,14 +24,18 @@ int main(int argc, char* argv[]) {
         return 1;
     };
 
-    int ptr = 0;
-    for (int i = 1; i < 10; ++i) {
-        std::cout << i << std::endl;
-        register_list[0]->simulate_second();
-        if (ptr < customer_list.size() && customer_list[ptr]->get_time_placed() == i) {
-            register_list[0]->add_customer_to_queue(customer_list[ptr++]);
-        }
-    }
+    Store store(customer_list, register_list);
+    store.order_entering_customers(customer_list);
+    for (auto i : customer_list) i->print();
+
+    // int ptr = 0;
+    // for (int i = 1; i < 10; ++i) {
+    //     std::cout << i << std::endl;
+    //     register_list[0]->simulate_second();
+    //     if (ptr < customer_list.size() && customer_list[ptr]->get_time_placed() == i) {
+    //         register_list[0]->add_customer_to_queue(customer_list[ptr++]);
+    //     }
+    // }
 
     clean_up_lists(customer_list, register_list);
     
