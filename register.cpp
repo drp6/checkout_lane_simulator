@@ -3,16 +3,20 @@
 
 #include <iostream> // DEBUG
 
-Register::Register(int _time_per_item) : 
-time_per_item (_time_per_item), current_time_left_on_item (_time_per_item)
+Register::Register() : 
+time_per_item (1)
 {}
 
-void Register::add_customer_to_queue(Customer &_customer) {
+void Register::add_customer_to_queue(Customer* _customer) {
     customer_queue.push(_customer);
 }
 
 void Register::remove_front_customer_from_queue() {
     customer_queue.pop();
+}
+
+void Register::set_time_per_item(int _time_per_item) {
+    time_per_item = _time_per_item;
 }
 
 
@@ -25,11 +29,7 @@ int Register::get_back_customer_basket_size() {
         return 0;
     }
 
-    return customer_queue.back().get_number_of_items();
-}
-
-void Register::reset_current_time_left_on_item() {
-    current_time_left_on_item = time_per_item;
+    return customer_queue.back()->get_number_of_items();
 }
 
 void Register::simulate_second() {
@@ -37,12 +37,34 @@ void Register::simulate_second() {
         return;
     }
 
+    if(customer_queue.front()->decrement_items() == 0) {
+        remove_front_customer_from_queue();
+        std::cout << "CUSTOMER DONE!" << std::endl; //DEBUG
+    }    
+
+}
+
+//Training Register extension//////////////////////////////
+
+Training_Register::Training_Register(int _time_per_item) : 
+current_time_left_on_item (_time_per_item)
+{set_time_per_item(_time_per_item);}
+
+void Training_Register::reset_current_time_left_on_item() {
+    current_time_left_on_item = time_per_item;
+}
+
+void Training_Register::simulate_second() {
+    if (get_queue_size() == 0) {
+        return;
+    }
+
     if (--current_time_left_on_item == 0) {
-        customer_queue.front().decrement_items();
+        customer_queue.front()->decrement_items();
         reset_current_time_left_on_item();
     }
 
-    if(customer_queue.front().get_number_of_items() == 0) {
+    if(customer_queue.front()->get_number_of_items() == 0) {
         remove_front_customer_from_queue();
         std::cout << "CUSTOMER DONE!" << std::endl; //DEBUG
     }
