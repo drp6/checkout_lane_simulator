@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "customer.hpp"
+#include "register.hpp"
 
 int update_customer_list(std::string file_path, std::vector<Customer> &customer_list);
 
