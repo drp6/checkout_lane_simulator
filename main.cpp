@@ -7,6 +7,7 @@
 #include "register.hpp"
 #include "store.hpp"
 
+// Function prototypes
 int get_store_info(std::string file_path, std::vector<Customer*> &customer_list, std::vector<Register*> &register_list);
 std::vector<Register*> create_register_list(int number_of_registers);
 void clean_up_lists(std::vector<Customer*> &customer_list, std::vector<Register*> &register_list);
@@ -14,34 +15,32 @@ void clean_up_lists(std::vector<Customer*> &customer_list, std::vector<Register*
 int main(int argc, char* argv[]) {
 
     if (argc != 2) {
-        std::cout << "usage: cashier_sim input_file" << std::endl;
+        std::cout << "usage: grocery_sim input_file" << std::endl;
         return 1;
     }
 
     std::vector<Customer*> customer_list;
     std::vector<Register*> register_list;
     if (get_store_info(argv[1], customer_list, register_list) == -1) {
+        // Error message will be printed to stdout
         return 1;
-    };
+    }
 
     Store store(customer_list, register_list);
-    store.order_entering_customers(customer_list);
-    for (auto i : customer_list) i->print();
 
-    // int ptr = 0;
-    // for (int i = 1; i < 10; ++i) {
-    //     std::cout << i << std::endl;
-    //     register_list[0]->simulate_second();
-    //     if (ptr < customer_list.size() && customer_list[ptr]->get_time_placed() == i) {
-    //         register_list[0]->add_customer_to_queue(customer_list[ptr++]);
-    //     }
-    // }
+    while (1) {
+        store.simulate_minute();
+        if (store.get_customers_remaining() == 0) break;
+    }
+
+    std::cout << "Finished at: t=" << store.get_current_time() << " minutes" << std::endl;
 
     clean_up_lists(customer_list, register_list);
     
     return 0;
 }
 
+// This function will populate both the Customer List and the Register List from the file given on the command line
 int get_store_info(std::string file_path, std::vector<Customer*> &customer_list, std::vector<Register*> &register_list) {
 
     std::ifstream customer_data;
@@ -58,7 +57,6 @@ int get_store_info(std::string file_path, std::vector<Customer*> &customer_list,
     int number_of_registers = std::stoi(line);
     register_list = create_register_list(number_of_registers);
     
-    int ret = 0;
     while(getline(customer_data, line)) {
         int time_placed, items_in_basket;
         std::istringstream iss(line);
@@ -78,14 +76,15 @@ int get_store_info(std::string file_path, std::vector<Customer*> &customer_list,
         items_in_basket = std::stoi(arg);
         
         customer_list.emplace_back(new Customer(customer_type, time_placed, items_in_basket));
-        ++ret;
     }
     customer_data.close();
 
-    return ret;
+    return 0;
 }
 
+// Helper function for get_store_info()
 std::vector<Register*> create_register_list(int number_of_registers) {
+
     std::vector<Register*> ret;
 
     for (int i = 0; i < number_of_registers - 1; ++i) {
@@ -95,10 +94,13 @@ std::vector<Register*> create_register_list(int number_of_registers) {
     if (number_of_registers != 0) {
         ret.emplace_back(new Training_Register(2));
     }
+
     return ret;
 }
 
+// Memory management
 void clean_up_lists(std::vector<Customer*> &customer_list, std::vector<Register*> &register_list) {
+
     for (size_t i = 0; i < customer_list.size(); ++i) {
         delete(customer_list[i]);
     }
